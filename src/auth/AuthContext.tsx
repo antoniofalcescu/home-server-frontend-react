@@ -36,17 +36,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 function loadAuthState(): AuthState {
 	try {
 		const token = localStorage.getItem('token');
-		if (token) {
-			const user = jwtDecode<User>(token);
-			return { user, token };
+		if (!token) {
+			return { user: null, token: null };
 		}
+
+		const now = Date.now() / 1000;
+
+		const user = jwtDecode<User>(token);
+		if (user.exp <= now) {
+			console.warn('Token expired, clearing storage');
+			localStorage.removeItem('token');
+			return { user: null, token: null };
+		}
+
+		return { user, token };
 	} catch (error) {
 		localStorage.removeItem('token');
 		console.error('Auth initialization failed', error);
+		return { user: null, token: null };
 	}
-
-	return {
-		user: null,
-		token: null
-	};
 }

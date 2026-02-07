@@ -3,7 +3,6 @@ import { Input } from '../../../components/form/Input.tsx';
 import { Button } from '../../../components/form/Button.tsx';
 import { useAuth } from '../../../auth';
 
-// TODO: implement local storage and in-memory cache with react context for jwt and user data
 export function LoginForm() {
 	const { login } = useAuth();
 
@@ -11,13 +10,17 @@ export function LoginForm() {
 		const email = formData.get('email');
 		const password = formData.get('password');
 
-		const response = await fetch('http://localhost:4000/api/v1/authentication/login', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({ login: email, password })
-		});
+		// TODO: needs error handling and to be moved in a separate login.api.ts file
+		const response = await fetch(
+			`${import.meta.env.VITE_API_BASE_URL}/api/v1/authentication/login`,
+			{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ login: email, password })
+			}
+		);
 
 		const { token } = await response.json();
 		login(token);
