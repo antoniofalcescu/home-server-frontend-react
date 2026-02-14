@@ -1,7 +1,6 @@
 import type { SEARCH_STATUS } from './constants.ts';
 
 type SearchIdleState = { status: typeof SEARCH_STATUS.IDLE };
-type SearchLoadingState = { status: typeof SEARCH_STATUS.LOADING };
 type SearchSuccessState<T> = {
 	status: typeof SEARCH_STATUS.SUCCESS;
 	data: T[];
@@ -11,11 +10,7 @@ type SearchErrorState = {
 	error: string;
 };
 
-export type SearchState<T> =
-	| SearchIdleState
-	| SearchLoadingState
-	| SearchSuccessState<T>
-	| SearchErrorState;
+export type SearchState<T> = SearchIdleState | SearchSuccessState<T> | SearchErrorState;
 
 export type UseSearch<T> = {
 	state: SearchState<T>;

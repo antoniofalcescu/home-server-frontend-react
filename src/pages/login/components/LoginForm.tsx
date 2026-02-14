@@ -2,9 +2,11 @@ import { Label } from '../../../components/form/Label.tsx';
 import { Input } from '../../../components/form/Input.tsx';
 import { Button } from '../../../components/form/Button.tsx';
 import { useAuth } from '../../../auth';
+import { useNavigate } from 'react-router';
 
 export function LoginForm() {
 	const { login } = useAuth();
+	const navigate = useNavigate();
 
 	async function handleLogin(formData: FormData) {
 		const email = formData.get('email');
@@ -24,6 +26,7 @@ export function LoginForm() {
 
 		const { token } = await response.json();
 		login(token);
+		navigate('/');
 	}
 
 	return (

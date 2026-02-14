@@ -1,27 +1,16 @@
 import { Input } from '../../../components/form/Input.tsx';
 import { Button } from '../../../components/form/Button.tsx';
-import { type FormHTMLAttributes, useTransition } from 'react';
+import { type FormHTMLAttributes } from 'react';
 import { cn } from '../../../lib/utils.ts';
 
-type SearchFormProps = Omit<FormHTMLAttributes<HTMLFormElement>, 'action'> & {
-	onSearch: (query: string) => Promise<void>;
-};
+type SearchFormProps = FormHTMLAttributes<HTMLFormElement> & { disabled?: boolean };
 
-export function SearchForm({ onSearch, className, ...props }: SearchFormProps) {
-	const [isPending, startTransition] = useTransition();
-
-	async function handleSearch(formData: FormData) {
-		const query = formData.get('query') as string;
-		startTransition(async () => {
-			await onSearch(query);
-		});
-	}
-
+export function SearchForm({ disabled = false, className, ...props }: SearchFormProps) {
 	return (
-		<form action={handleSearch} className={cn('flex flex-col gap-6 px-6', className)} {...props}>
-			<Input name="query" id="query" type="search" required={true} disabled={isPending} />
-			<Button type="submit" disabled={isPending}>
-				{isPending ? 'Searching...' : 'Search'}
+		<form className={cn(className)} {...props}>
+			<Input name="query" id="query" type="search" required={true} disabled={disabled} />
+			<Button type="submit" disabled={disabled}>
+				{disabled ? 'Searching...' : 'Search'}
 			</Button>
 		</form>
 	);
